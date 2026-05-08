@@ -5,7 +5,7 @@ const register = async(req, res) => {
     const { name, email, password, confirmPassword } = req.body;
 
     try {
-        const existingUser = await User.findOne({email});
+        const existingUser = await User.findOne({email });
 
         if (existingUser) {
             return res.status(400).json({message: "User already exists" });
@@ -26,10 +26,10 @@ const register = async(req, res) => {
          await newUser.save();
          const token = jwt.sign({id: newUser._id, emaail: newUser.email }, process.env.JWT_SECRET,{ expiresIn: "1h"});
 
-         res.status(201).json({message: "User created sucessfully", result: newUser, token});
+         res.status(201).json({message: "User created sucessfully", result: newUser, token });
 
     } catch (error) {
-        res.status(500).json({message:"Error while registering user", error: error-message });
+        res.status(500).json({message:"Error while registering user", error: error.message });
      }
 }
 const login = async (req, res) => {
@@ -50,7 +50,7 @@ const login = async (req, res) => {
             return res.status(404).json({ message: "The password is incorrect"});
         }
 
-        const taken = jwt.sign({ id: existingUser._id, email: existingUser.email }, process.env.JWT_SECRET,{expiresIn: "1h" });
+        const token = jwt.sign({ id: existingUser._id, email: existingUser.email }, process.env.JWT_SECRET,{expiresIn: "1h" });
         res.status(200).json({message: "Login sucessful", result: { name: existingUser.name, email: existingUser.email}, token});
 
     } catch (error) {
